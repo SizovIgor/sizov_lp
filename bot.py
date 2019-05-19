@@ -1,15 +1,23 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from emoji import emojize
 import logging
+import config
 
+config = config.get_config('settings.ini')
 # Настройки прокси
+
 PROXY = {'proxy_url': 'socks5://t1.learn.python.ru:1080',
          'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
+
 API_KEY = "706687382:AAFCm5L0-Be5wmyPtldr82zNG5Mb71-IJlE"
 
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO,
-                    filename='bot.log'
-                    )
+logging.basicConfig(
+    format='%(name)s - %(levelname)s - %(message)s',
+    level=config.get('Logging', 'Loglevel'),
+    filename=config.get('Logging', 'Filename')
+)
+
+USER_EMOJI = config.get('Settings', 'USER_EMOJI')
 
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
@@ -31,8 +39,10 @@ def talk_to_me(bot, update):
     print(user_text)
     update.message.reply_text(user_text)
 
+
 def commit(bot, update):
-    eval("""""")
+    return bot, update
+
 
 def main():
     mybot = Updater(API_KEY, request_kwargs=PROXY)
@@ -41,7 +51,6 @@ def main():
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("update", greet_update))
     dp.add_handler(CommandHandler("commit", commit))
-
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
 
     mybot.start_polling()
