@@ -32,7 +32,7 @@ def talk_to_me(bot, update):
     update.message.reply_text(user_text)
 
 def commit(bot, update):
-    eval("")
+    eval()
 
 def main():
     mybot = Updater(API_KEY, request_kwargs=PROXY)
