@@ -1,15 +1,18 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from emoji import emojize
+import requests
 import logging
 import config
 
 config = config.get_config('settings.ini')
 # Настройки прокси
 
-PROXY = {'proxy_url': 'socks5://t1.learn.python.ru:1080',
-         'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
+# PROXY_socks_h = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
+PROXY_socks = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
+PROXY = {'proxy_url': 'socks5{}://t1.learn.python.ru:1080',
+    'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
 
-API_KEY = "706687382:AAFCm5L0-Be5wmyPtldr82zNG5Mb71-IJlE"
+API_KEY = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
 
 logging.basicConfig(
     format='%(name)s - %(levelname)s - %(message)s',
@@ -41,12 +44,25 @@ def talk_to_me(bot, update):
 
 
 def commit(bot, update):
-    return bot, update
-
+    user_text = update.message.text
+    print('Вызван /commit', 'git commit -m {}'.format(user_text))
+    update.message.reply_text('git commit -m {}'.format(user_text.split()[1]))
+    eval('git commit -m {}'.format(user_text.split()[1]))
+    eval('git push')
+# def commit(bot, update):
+#     text = 'Вызван /commit'
+#     print(text)
+#     update.message.reply_text(update.message.text)
 
 def main():
+    # if requests.get('https://web.telegram.org', proxies=PROXY_socks_h).ok:
+    if requests.get('https://web.telegram.org', proxies=PROXY_socks).ok:
+        PROXY['proxy_url'] = PROXY['proxy_url'].format('h')
+        print('Correct proxy: {}'.format(PROXY))
+    else:
+        PROXY['proxy_url'] = PROXY['proxy_url'].format('')
+        print('Correct proxy: {}'.format(PROXY))
     mybot = Updater(API_KEY, request_kwargs=PROXY)
-
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("update", greet_update))
@@ -58,3 +74,4 @@ def main():
 
 
 main()
+# request_kwargs=PROXY,
