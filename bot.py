@@ -10,7 +10,7 @@ config = config.get_config('settings.ini')
 # PROXY_socks_h = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
 PROXY_socks = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
 PROXY = {'proxy_url': 'socks5{}://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
+         'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
 
 API_KEY = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
 
@@ -49,10 +49,7 @@ def commit(bot, update):
     update.message.reply_text('git commit -m {}'.format(user_text.split()[1]))
     eval('git commit -m {}'.format(user_text.split()[1]))
     eval('git push')
-# def commit(bot, update):
-#     text = 'Вызван /commit'
-#     print(text)
-#     update.message.reply_text(update.message.text)
+
 
 def main():
     # if requests.get('https://web.telegram.org', proxies=PROXY_socks_h).ok:
