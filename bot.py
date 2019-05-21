@@ -1,22 +1,17 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-# from emoji import emojize
 import requests
 import logging
 import config
 import crypto
-import getpass
 
 config = config.get_config('settings.ini')
 # Настройки прокси
 
-# PROXY_socks_h = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
 PROXY_socks = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
 PROXY = {'proxy_url': 'socks5{}://t1.learn.python.ru:1080',
          'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
 
 API_KEY = b'K^][\x0c\x0c\x0f\x02AR.*|_Rp\x17\x04>XUP\x0fg^0"\rsLIY\n<0\x11\x14]\x7fU\x03\n\x0c!l'
-# var = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
-# assert var == crypto.decrypt(API_KEY, input('Type your passphrase'))
 
 logging.basicConfig(
     format='%(name)s - %(levelname)s - %(message)s',
@@ -26,7 +21,6 @@ logging.basicConfig(
 
 USER_EMOJI = config.get('Settings', 'USER_EMOJI')
 
-bytes
 
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
@@ -53,8 +47,8 @@ def commit(bot, update):
     user_text = update.message.text
     print('Вызван /commit', 'git commit -m {}'.format(user_text))
     update.message.reply_text('git commit -m {}'.format(user_text.split()[1]))
-    eval('git commit -m {}'.format(user_text.split()[1]))
-    eval('git push')
+    # eval('git commit -m {}'.format(user_text.split()[1]))
+    # eval('git push')
 
 
 def check_message(bot, update):
