@@ -18,12 +18,28 @@ logging.basicConfig(
     level=config.get('Logging', 'Loglevel'),
     filename=config.get('Logging', 'Filename')
 )
-
+logger = logging.getLogger('bot_logger')
+logger.setLevel(logging.INFO)
+fh = logging.FileHandler('bot_logger.log')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 USER_EMOJI = config.get('Settings', 'USER_EMOJI')
 
 
+def log(func):
+    def log_func(*args, **kwargs):
+        logger.info('Start: {}'.format(func.__name__))
+        print('Start: ', func.__name__)
+        func(*args, **kwargs)
+        print('Finished: ', func.__name__)
+
+    return log_func
+
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
+@log
 def greet_user(bot, update):
     text = 'Вызван /start'
     print(text)
@@ -34,6 +50,7 @@ def greet_user(bot, update):
 def greet_update(bot, update):
     text = 'Вызван /update'
     print(text)
+    print(update)
     update.message.reply_text(text)
 
 
@@ -58,12 +75,15 @@ def check_message(bot, update):
 
 def main():
     # if requests.get('https://web.telegram.org', proxies=PROXY_socks_h).ok:
+    logger.info('Initializing proxy')
     if requests.get('https://web.telegram.org', proxies=PROXY_socks).ok:
         PROXY['proxy_url'] = PROXY['proxy_url'].format('h')
         print('Correct proxy: {}'.format('socks5h'))
     else:
         PROXY['proxy_url'] = PROXY['proxy_url'].format('')
         print('Correct proxy: {}'.format('socks5'))
+    logger.debug('Proxy initializing finished')
+    logger.info('Start initialize Updater')
     mybot = Updater(crypto.decrypt(API_KEY), request_kwargs=PROXY)
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))

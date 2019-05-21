@@ -1,4 +1,13 @@
 import getpass
+import logging
+
+logger = logging.getLogger('crypto_logger')
+logger.setLevel(logging.INFO)
+fh = logging.FileHandler('bot_logger.log')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
 
 
 def encrypt(var, key):
@@ -20,6 +29,7 @@ def encrypt(var, key):
 
 
 def decrypt(var):
+    logger.info('start decrypting')
     key = getpass.getpass('Type your passphrase: ')
     var_len = len(var)
     step = len(key)
@@ -34,5 +44,5 @@ def decrypt(var):
     for block in list_p:
         for a, b in zip(block, key):
             code_list.append(chr(ord(a) ^ ord(b)))
+    logger.info('Decrypting finished')
     return ''.join(code_list)
-
