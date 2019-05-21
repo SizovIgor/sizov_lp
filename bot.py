@@ -1,8 +1,10 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from emoji import emojize
+# from emoji import emojize
 import requests
 import logging
 import config
+import crypto
+import getpass
 
 config = config.get_config('settings.ini')
 # Настройки прокси
@@ -12,7 +14,9 @@ PROXY_socks = {'https': "socks5h://learn:python@t3.learn.python.ru:1080"}
 PROXY = {'proxy_url': 'socks5{}://t1.learn.python.ru:1080',
          'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
 
-API_KEY = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
+API_KEY = b'K^][\x0c\x0c\x0f\x02AR.*|_Rp\x17\x04>XUP\x0fg^0"\rsLIY\n<0\x11\x14]\x7fU\x03\n\x0c!l'
+# var = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
+# assert var == crypto.decrypt(API_KEY, input('Type your passphrase'))
 
 logging.basicConfig(
     format='%(name)s - %(levelname)s - %(message)s',
@@ -21,6 +25,8 @@ logging.basicConfig(
 )
 
 USER_EMOJI = config.get('Settings', 'USER_EMOJI')
+
+bytes
 
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
@@ -51,15 +57,20 @@ def commit(bot, update):
     eval('git push')
 
 
+def check_message(bot, update):
+    update.message.reply_text('Вы выидите похожее сообщение в консоли?')
+    print("Вы видите похожее сообщение от бота?")
+
+
 def main():
     # if requests.get('https://web.telegram.org', proxies=PROXY_socks_h).ok:
     if requests.get('https://web.telegram.org', proxies=PROXY_socks).ok:
         PROXY['proxy_url'] = PROXY['proxy_url'].format('h')
-        print('Correct proxy: {}'.format(PROXY))
+        print('Correct proxy: {}'.format('socks5h'))
     else:
         PROXY['proxy_url'] = PROXY['proxy_url'].format('')
-        print('Correct proxy: {}'.format(PROXY))
-    mybot = Updater(API_KEY, request_kwargs=PROXY)
+        print('Correct proxy: {}'.format('socks5'))
+    mybot = Updater(crypto.decrypt(API_KEY), request_kwargs=PROXY)
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(CommandHandler("update", greet_update))
