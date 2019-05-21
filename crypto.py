@@ -36,17 +36,3 @@ def decrypt(var):
             code_list.append(chr(ord(a) ^ ord(b)))
     return ''.join(code_list)
 
-# var = "862054662:AAEgkDdlQ3lh6S-XMfJtpmyT_z-eFapbcJU"
-
-# step = 5
-# pos = 0
-# var_len = len(var)
-# while True:
-#     if pos + step > var_len:
-#         break
-#     print(var[pos:pos + step])
-#     pos += step
-
-# passphrase = 'shok'
-# code = encrypt(var, passphrase)
-# print(decrypt(code, passphrase))
