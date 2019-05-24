@@ -3,6 +3,7 @@ import requests
 import logging
 import config
 import crypto
+import ephem
 
 config = config.get_config('settings.ini')
 # Настройки прокси
@@ -41,6 +42,12 @@ def log(func):
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
 @log
 def greet_user(bot, update):
+    text = 'Вызван /start'
+    print(text)
+    update.message.reply_text(text)
+
+@log
+def planet(bot, update):
     text = 'Вызван /start'
     print(text)
     update.message.reply_text(text)
@@ -87,6 +94,7 @@ def main():
     mybot = Updater(crypto.decrypt(API_KEY), request_kwargs=PROXY)
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
+    dp.add_handler(CommandHandler("planet", planet))
     dp.add_handler(CommandHandler("update", greet_update))
     dp.add_handler(CommandHandler("commit", commit))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
@@ -95,5 +103,6 @@ def main():
     mybot.idle()
 
 
-main()
+if __name__=="__main__":
+    main()
 # request_kwargs=PROXY,
