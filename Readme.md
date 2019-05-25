@@ -6,7 +6,7 @@
 
 
 ```text
-The Zen of Python, by Tim Peters
+Gray block
 ```
 
 ## Installation
