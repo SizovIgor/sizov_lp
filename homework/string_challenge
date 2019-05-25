@@ -1,0 +1,28 @@
+# Вывести последнюю букву в слове
+word = 'Архангельск'
+print(word[-1])
+
+# Вывести количество букв а в слове
+word = 'Архангельск'
+print(word.lower().count('a'))
+
+# Вывести количество гласных букв в слове
+word = 'Архангельск'
+glas = 'аиеёоуыэюя'
+c = 0
+print(
+    len([x for x in word.lower() if x in glas])
+)
+
+# Вывести количество слов в предложении
+sentence = 'Мы приехали в гости'
+print(len(sentence.split()))
+
+# Вывести первую букву каждого слова на отдельной строке
+sentence = 'Мы приехали в гости'
+[print(x[0]) for x in sentence.split()]
+
+# Вывести усреднённую длину слова.
+sentence = 'Мы приехали в гости'
+words_len = [len(x) for x in sentence.split()]
+print(sum(words_len) / len(words_len))
