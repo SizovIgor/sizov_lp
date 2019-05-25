@@ -1,9 +1,18 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from datetime import datetime
 import requests
 import logging
 import config
 import crypto
 import ephem
+from glob import glob
+from random import choice
+from emoji import emojize
+
+from telegram import ReplyKeyboardMarkup
+
+images_path = "C:\projects\learn_python_source\learn.python.ru\lessons\img\{}"
+cats = glob(images_path.format("cat*.jp*g"))
 
 config = config.get_config('settings.ini')
 # Настройки прокси
@@ -41,16 +50,25 @@ def log(func):
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
 @log
-def greet_user(bot, update):
-    text = 'Вызван /start'
-    print(text)
-    update.message.reply_text(text)
+def greet_user(bot, update, user_data):
+    smile = emojize(choice(USER_EMOJI), use_aliases=True)
+    print('Вызван /start')
+    update.message.reply_text("Привет! {}".format(smile))
+
 
 @log
-def planet(bot, update):
-    text = 'Вызван /start'
-    print(text)
-    update.message.reply_text(text)
+def send_cat(bot, update, user_data):
+    print('Вызваны котики')
+    update.message.reply_text("Сейчас отправлю котика")
+    images_path = "C:\projects\learn_python_source\learn.python.ru\lessons\img\{}"
+    logger.info("Image path: {}".format(images_path))
+    cats_pic = glob(images_path.format("cat*.jp*g"))
+    logger.info(cats_pic)
+    cat_pic = choice(cats_pic)
+    logger.info(cat_pic)
+    # update.message.reply_text(choice(cats))
+    bot.send_photo(chat_id=update.message.chat.id, photo=open(cat_pic, 'rb'))
+    logger.info('the photo was sending')
 
 
 # Функция, которая соединяется с платформой Telegram, "тело" нашего бота
@@ -80,6 +98,22 @@ def check_message(bot, update):
     print("Вы видите похожее сообщение от бота?")
 
 
+@log
+def wordcount(bot, update, user_data):
+    # print("Вызвн /wordcount")
+    words = update.message.text.split()
+    update.message.reply_text(len(words[1:]))
+    print(len(words[1:]))
+
+
+@log
+def emp(bot, update, user_data):
+    moon = ephem.next_full_moon(datetime.datetime.now())
+    moon = datetime.strptime(str(moon), "%Y/%m/%d %H:%M:%S")
+    update.message.reply_text("Следующее полнолуние будет: {}".format(moon))
+    print(moon, type(moon))
+
+
 def main():
     # if requests.get('https://web.telegram.org', proxies=PROXY_socks_h).ok:
     logger.info('Initializing proxy')
@@ -93,16 +127,18 @@ def main():
     logger.info('Start initialize Updater')
     mybot = Updater(crypto.decrypt(API_KEY), request_kwargs=PROXY)
     dp = mybot.dispatcher
-    dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(CommandHandler("planet", planet))
-    dp.add_handler(CommandHandler("update", greet_update))
-    dp.add_handler(CommandHandler("commit", commit))
+    dp.add_handler(CommandHandler("start", greet_user, pass_user_data=True))
+    dp.add_handler(CommandHandler("wordcount", wordcount, pass_user_data=True))
+    dp.add_handler(CommandHandler("cat", send_cat, pass_user_data=True))
+    dp.add_handler(CommandHandler("update", greet_update, pass_user_data=True))
+    dp.add_handler(CommandHandler("commit", commit, pass_user_data=True))
+    dp.add_handler(CommandHandler("emp", emp, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
-
+    # check_message()
     mybot.start_polling()
     mybot.idle()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
 # request_kwargs=PROXY,
